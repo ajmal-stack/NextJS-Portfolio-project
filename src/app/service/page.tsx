@@ -100,7 +100,7 @@ export default function Service() {
           initial='hidden'
           animate='visible'
         >
-          {services.map((service, index) => (
+          {services.map((service) => (
             <motion.div
               key={service.title}
               variants={itemVariants}
@@ -157,7 +157,7 @@ export default function Service() {
                      hover:bg-[#FFE55C] transform hover:-translate-y-1 transition-all duration-300
                      shadow-lg hover:shadow-xl'
           >
-            Let's Work Together
+            Let&apos;s Work Together
           </a>
         </motion.div>
       </div>

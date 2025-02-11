@@ -1,4 +1,5 @@
 'use client';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import {
   FaEnvelope,
@@ -6,8 +7,138 @@ import {
   FaLinkedin,
   FaMapMarkerAlt,
 } from 'react-icons/fa';
+import emailjs from '@emailjs/browser';
+import toast from 'react-hot-toast';
+import { showToast } from '../components/Toast';
+
+// Update the initialization with the correct public key
+emailjs.init('BhK_qOapbLq7mNd8f'); // This is your public key
 
 export default function Contact() {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    message: '',
+  });
+  const [status, setStatus] = useState({
+    loading: false,
+    error: false,
+    success: false,
+  });
+  const [cooldownTime, setCooldownTime] = useState<number | null>(null);
+
+  // Move cooldown check to useEffect
+  useEffect(() => {
+    const lastMessageTime = localStorage.getItem('lastMessageTime');
+    if (lastMessageTime) {
+      const cooldownPeriod = 24 * 60 * 60 * 1000;
+      const timeSinceLastMessage = Date.now() - parseInt(lastMessageTime);
+
+      if (timeSinceLastMessage < cooldownPeriod) {
+        const hoursRemaining = Math.ceil(
+          (cooldownPeriod - timeSinceLastMessage) / (1000 * 60 * 60)
+        );
+        setCooldownTime(hoursRemaining);
+        toast.error(`You can send another message in ${hoursRemaining} hours`);
+      } else {
+        setCooldownTime(null);
+      }
+    }
+  }, []);
+
+  const checkMessageCooldown = (): boolean => {
+    if (cooldownTime !== null) {
+      toast.error(
+        `Please wait ${cooldownTime} hours before sending another message`
+      );
+      return false;
+    }
+    return true;
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    // Add a test toast to verify the system is working
+    toast.success('Test toast');
+
+    if (!checkMessageCooldown()) {
+      return;
+    }
+
+    setStatus({ loading: true, error: false, success: false });
+
+    // Form validation
+    if (!formData.name || !formData.email || !formData.message) {
+      showToast({
+        message: 'Please fill in all fields',
+        type: 'error',
+      });
+      setStatus({ loading: false, error: true, success: false });
+      return;
+    }
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(formData.email)) {
+      toast.error('Please enter a valid email address');
+      setStatus({ loading: false, error: true, success: false });
+      return;
+    }
+
+    try {
+      await emailjs.send('service_a8xl9ik', 'template_w8rl63y', {
+        from_name: formData.name,
+        from_email: formData.email,
+        message: formData.message,
+        to_name: 'Admin',
+        reply_to: formData.email,
+      });
+
+      localStorage.setItem('lastMessageTime', Date.now().toString());
+      setCooldownTime(24); // Set cooldown time after successful send
+
+      setStatus({ loading: false, error: false, success: true });
+      setFormData({ name: '', email: '', message: '' });
+
+      // Add console.log to debug
+      console.log('Showing success toast');
+      showToast({
+        message: 'Message sent successfully! I will get back to you soon.',
+        type: 'success',
+      });
+    } catch (error) {
+      console.error('FAILED...', error);
+      setStatus({ loading: false, error: true, success: false });
+
+      // Add console.log to debug
+      console.log('Showing error toast');
+      showToast({
+        message: 'Failed to send message. Please try again later.',
+        type: 'error',
+      });
+    }
+  };
+
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) => {
+    setFormData((prev) => ({
+      ...prev,
+      [e.target.id]: e.target.value,
+    }));
+  };
+
+  // Log environment variables (remove in production)
+  useEffect(() => {
+    console.log('Service ID:', process.env.NEXT_PUBLIC_EMAILJS_SERVICE_ID);
+    console.log('Template ID:', process.env.NEXT_PUBLIC_EMAILJS_TEMPLATE_ID);
+    console.log(
+      'Public Key exists:',
+      !!process.env.NEXT_PUBLIC_EMAILJS_PUBLIC_KEY
+    );
+  }, []);
+
   const fadeIn = {
     initial: { opacity: 0, y: 20 },
     animate: { opacity: 1, y: 0 },
@@ -27,9 +158,9 @@ export default function Contact() {
             Get In Touch
           </h1>
           <p className='text-gray-400 max-w-2xl mx-auto text-sm md:text-base'>
-            I'm currently looking for new opportunities. Whether you have a
-            question or just want to say hi, I'll try my best to get back to
-            you!
+            I&apos;m currently looking for new opportunities. Whether you have a
+            question or just want to say hi, I&apos;ll try my best to get back
+            to you!
           </p>
         </motion.div>
 
@@ -116,7 +247,7 @@ export default function Contact() {
             <h2 className='text-2xl md:text-3xl font-bold text-white mb-6'>
               Send Message
             </h2>
-            <form className='space-y-4'>
+            <form onSubmit={handleSubmit} className='space-y-4'>
               <div>
                 <label
                   htmlFor='name'
@@ -127,6 +258,8 @@ export default function Contact() {
                 <input
                   type='text'
                   id='name'
+                  value={formData.name}
+                  onChange={handleChange}
                   className='w-full bg-[#0F1624] rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-purple-500'
                   placeholder='Your name'
                 />
@@ -141,6 +274,8 @@ export default function Contact() {
                 <input
                   type='email'
                   id='email'
+                  value={formData.email}
+                  onChange={handleChange}
                   className='w-full bg-[#0F1624] rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-purple-500'
                   placeholder='Your email'
                 />
@@ -154,6 +289,8 @@ export default function Contact() {
                 </label>
                 <textarea
                   id='message'
+                  value={formData.message}
+                  onChange={handleChange}
                   rows={4}
                   className='w-full bg-[#0F1624] rounded-lg px-4 py-3 text-white focus:outline-none focus:ring-2 focus:ring-purple-500'
                   placeholder='Your message'
@@ -162,9 +299,12 @@ export default function Contact() {
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
-                className='w-full bg-purple-500 text-white py-3 rounded-lg font-semibold hover:bg-purple-600 transition-colors'
+                className='w-full bg-purple-500 text-white py-3 rounded-lg font-semibold 
+                          hover:bg-purple-600 transition-colors disabled:opacity-50 
+                          disabled:cursor-not-allowed'
+                disabled={status.loading || cooldownTime !== null}
               >
-                Send Message
+                {status.loading ? 'Sending...' : 'Send Message'}
               </motion.button>
             </form>
           </motion.div>

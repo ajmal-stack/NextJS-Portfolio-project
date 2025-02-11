@@ -1,17 +1,42 @@
 'use client';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useState, useEffect, useCallback } from 'react';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
 import Logo from './Logo';
-import { FaHome, FaUser, FaCog, FaFolder, FaPhone } from 'react-icons/fa';
+import {
+  FaHome,
+  FaUser,
+  FaCog,
+  FaFolder,
+  FaPhone,
+  FaBlog,
+} from 'react-icons/fa';
 
 const Navbar = () => {
-  const scrollToSection = (
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const scrollToSection = async (
     e: React.MouseEvent<HTMLAnchorElement>,
     sectionId: string
   ) => {
     e.preventDefault();
+
+    // Check if we're not on the home page
+    if (pathname !== '/') {
+      // Use Next.js router for client-side navigation
+      await router.push('/');
+      // Wait for a brief moment to ensure the page has loaded
+      setTimeout(() => {
+        const section = document.getElementById(sectionId);
+        if (section) {
+          section.scrollIntoView({ behavior: 'smooth' });
+        }
+      }, 100);
+      return;
+    }
+
+    // If we're on home page, smooth scroll to section
     const section = document.getElementById(sectionId);
     if (section) {
       section.scrollIntoView({ behavior: 'smooth' });
@@ -19,7 +44,6 @@ const Navbar = () => {
   };
   const [isScrolled, setIsScrolled] = useState(false);
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const pathname = usePathname();
 
   const throttle = <T extends (...args: unknown[]) => void>(
     func: T,
@@ -69,6 +93,11 @@ const Navbar = () => {
       icon: <FaFolder className='text-2xl' />,
     },
     {
+      name: 'Blog',
+      sectionId: 'blog',
+      icon: <FaBlog className='text-2xl' />,
+    },
+    {
       name: 'Contact',
       sectionId: 'contact',
       icon: <FaPhone className='text-2xl' />,
@@ -98,7 +127,7 @@ const Navbar = () => {
               </a>
             </div>
 
-            <div className='hidden md:flex space-x-8'>
+            <div className='hidden md:flex items-center space-x-8'>
               {navItems.map((item) => (
                 <a
                   key={item.name}

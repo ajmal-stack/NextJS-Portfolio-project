@@ -2,6 +2,14 @@
 import { motion } from 'framer-motion';
 
 const Hero = () => {
+  const scrollToProjects = (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    const projectsSection = document.getElementById('projects');
+    if (projectsSection) {
+      projectsSection.scrollIntoView({ behavior: 'smooth' });
+    }
+  };
+
   return (
     <section
       id='home'
@@ -47,10 +55,7 @@ const Hero = () => {
             Crafting digital experiences with modern technologies
           </motion.p>
           <motion.button
-            onClick={() => {
-              const projectsSection = document.getElementById('projects');
-              projectsSection?.scrollIntoView({ behavior: 'smooth' });
-            }}
+            onClick={scrollToProjects}
             className='bg-purple-500 px-8 py-4 rounded-full text-lg font-semibold hover:bg-purple-600 transition-colors'
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
