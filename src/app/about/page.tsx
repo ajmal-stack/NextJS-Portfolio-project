@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
+import Image from 'next/image';
 
 export default function About() {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -224,9 +225,11 @@ export default function About() {
                     className='flex flex-col items-center bg-[#171F38] p-6 rounded-lg hover:transform hover:scale-105 transition-all duration-300 w-32'
                   >
                     <div className='w-16 h-16 mb-4'>
-                      <img
+                      <Image
                         src={skill.icon}
                         alt={skill.name}
+                        width={64}
+                        height={64}
                         className='w-full h-full object-contain'
                       />
                     </div>
@@ -242,9 +245,11 @@ export default function About() {
                     className='flex flex-col items-center bg-[#171F38] p-6 rounded-lg hover:transform hover:scale-105 transition-all duration-300 w-32'
                   >
                     <div className='w-16 h-16 mb-4'>
-                      <img
+                      <Image
                         src={skill.icon}
                         alt={skill.name}
+                        width={64}
+                        height={64}
                         className='w-full h-full object-contain'
                       />
                     </div>

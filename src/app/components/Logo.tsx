@@ -1,14 +1,16 @@
 'use client';
 
+import Image from 'next/image';
+
 const Logo = () => {
   return (
-    <div className='w-24 h-12 flex items-center justify-center'>
-      <img
-        src='/img/logo/ajmal-light-logo.svg'
-        alt='Logo'
-        className='w-full h-full object-contain'
-      />
-    </div>
+    <Image
+      src='/img/logo/ajmal-light-logo.svg'
+      alt='Logo'
+      width={40}
+      height={40}
+      priority
+    />
   );
 };
 

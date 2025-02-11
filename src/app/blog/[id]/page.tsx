@@ -1,4 +1,3 @@
-import { notFound } from 'next/navigation';
 import Image from 'next/image';
 import { blogPosts } from '@/app/data/blogPosts';
 import Link from 'next/link';
@@ -11,10 +10,11 @@ interface Props {
 }
 
 export default function BlogPost({ params }: Props) {
-  const post = blogPosts.find((post) => post.id === parseInt(params.id));
+  const { id } = params;
+  const post = blogPosts.find((post) => post.id.toString() === id);
 
   if (!post) {
-    notFound();
+    return <div>Post not found</div>;
   }
 
   return (
