@@ -1,54 +1,72 @@
+import { notFound } from 'next/navigation';
 import Image from 'next/image';
-import { blogPosts } from '@/app/data/blogPosts';
-import Link from 'next/link';
-import ReactMarkdown from 'react-markdown';
+import { FaCalendar, FaTag } from 'react-icons/fa';
 
-interface Props {
-  params: {
-    id: string;
-  };
+async function getBlog(id: string) {
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/blogs/${id}`,
+      {
+        cache: 'no-store',
+      }
+    );
+
+    if (!res.ok) throw new Error('Failed to fetch blog');
+
+    return res.json();
+  } catch (error) {
+    return null;
+  }
 }
 
-export default function BlogPost({ params }: Props) {
-  const { id } = params;
-  const post = blogPosts.find((post) => post.id.toString() === id);
+export default async function BlogPost({ params }: { params: { id: string } }) {
+  const blog = await getBlog(params.id);
 
-  if (!post) {
-    return <div>Post not found</div>;
+  if (!blog) {
+    notFound();
   }
 
   return (
-    <div className='min-h-screen bg-[#0B0F16] pt-28 pb-12 px-4 sm:px-6 lg:px-8'>
-      <article className='max-w-4xl mx-auto'>
-        <Link
-          href='/blog'
-          className='inline-flex items-center text-purple-500 hover:text-purple-400 mb-8'
-          prefetch={true}
-        >
-          <span>← Back to Blog</span>
-        </Link>
-
-        <div className='relative w-full h-[400px] mb-8'>
+    <article className='max-w-4xl mx-auto px-4 py-8'>
+      {blog.image && (
+        <div className='relative w-full h-[400px] mb-8 rounded-lg overflow-hidden'>
           <Image
-            src={post.imageUrl}
-            alt={post.title}
+            src={blog.image}
+            alt={blog.title}
             fill
-            className='object-cover rounded-lg'
+            className='object-cover'
           />
         </div>
+      )}
 
-        <div className='text-sm text-purple-500 font-semibold mb-2'>
-          {post.category}
+      <h1 className='text-4xl font-bold text-white mb-4'>{blog.title}</h1>
+
+      <div className='flex items-center gap-4 text-gray-400 mb-8'>
+        <div className='flex items-center gap-2'>
+          <FaCalendar />
+          <span>{new Date(blog.createdAt).toLocaleDateString()}</span>
         </div>
+        {blog.tags?.length > 0 && (
+          <div className='flex items-center gap-2'>
+            <FaTag />
+            <div className='flex gap-2'>
+              {blog.tags.map((tag: string) => (
+                <span
+                  key={tag}
+                  className='bg-purple-500/20 text-purple-400 px-2 py-1 rounded-full text-sm'
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
 
-        <h1 className='text-4xl font-bold text-white mb-4'>{post.title}</h1>
-
-        <div className='text-gray-400 mb-8'>{post.date}</div>
-
-        <div className='prose prose-invert max-w-none'>
-          <ReactMarkdown>{post.content}</ReactMarkdown>
-        </div>
-      </article>
-    </div>
+      <div
+        className='prose prose-invert max-w-none'
+        dangerouslySetInnerHTML={{ __html: blog.content }}
+      />
+    </article>
   );
 }

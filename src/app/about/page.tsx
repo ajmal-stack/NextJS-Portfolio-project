@@ -2,6 +2,7 @@
 
 import { useEffect, useRef } from 'react';
 import Image from 'next/image';
+import { motion } from 'framer-motion';
 
 export default function About() {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -71,197 +72,216 @@ export default function About() {
   return (
     <div
       id='about'
-      className='min-h-[70vh] bg-[#0F1624] flex items-center scroll-mt-10'
+      className='min-h-screen bg-[#0F1624] relative overflow-hidden scroll-mt-20 md:scroll-mt-24 px-4 sm:px-6'
     >
-      <div className='container mx-auto px-4 py-16'>
+      {/* Animated background elements - adjusted for mobile */}
+      <motion.div
+        className='absolute top-0 right-0 sm:right-20 w-48 sm:w-96 h-32 sm:h-96 
+                   bg-purple-500/10 rounded-full blur-3xl z-10'
+        animate={{
+          scale: [1, 1.2, 1],
+          rotate: [0, 180, 0],
+        }}
+        transition={{
+          duration: 10,
+          repeat: Infinity,
+          ease: 'linear',
+        }}
+      />
+      <motion.div
+        className='absolute bottom-20 left-0 sm:left-20 w-48 sm:w-96 h-48 sm:h-96 
+                   bg-blue-500/10 rounded-full blur-3xl'
+        animate={{
+          scale: [1.2, 1, 1.2],
+          rotate: [180, 0, 180],
+        }}
+        transition={{
+          duration: 10,
+          repeat: Infinity,
+          ease: 'linear',
+        }}
+      />
+
+      <div className='container mx-auto py-16 sm:py-24 relative z-20'>
         {/* Introduction Section */}
-        <div className='max-w-4xl mx-auto mb-16'>
-          <h1 className='text-4xl font-bold text-white mb-4 text-center'>
-            About Me
-          </h1>
-          <p className='text-lg text-gray-300 mb-6 text-center'>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+          className='max-w-4xl mx-auto mb-8 sm:mb-16 text-center pt-8'
+        >
+          <motion.div className='mb-6 sm:mb-8 relative inline-block'>
+            <h1
+              className='text-3xl sm:text-4xl md:text-5xl font-bold text-transparent 
+                          bg-clip-text bg-gradient-to-r from-purple-500 via-blue-500 
+                          to-cyan-500 mb-4'
+            >
+              About Me
+            </h1>
+            <motion.div
+              className='absolute -right-2 sm:-right-4 -top-2 sm:-top-4 w-6 sm:w-8 
+                        h-6 sm:h-8 text-purple-500'
+              animate={{ rotate: [0, 360], scale: [1, 1.2, 1] }}
+              transition={{ duration: 3, repeat: Infinity }}
+            >
+              ✦
+            </motion.div>
+          </motion.div>
+          <p className='text-base sm:text-lg text-gray-300 px-4 sm:px-6'>
             I&apos;m Ajmal Hussain, a Full Stack Developer with 2 years of
             experience in Javascript & React. I blend creativity with
             functionality to craft engaging designs. Choosing me means
             transforming ideas into results. Let&apos;s collaborate to enhance
-            your digital presence. Reach me at my email to discuss your project.
+            your digital presence.
           </p>
-        </div>
+        </motion.div>
 
         {/* What I'm Doing Section */}
-        <div className='mb-16'>
-          <h2 className='text-3xl font-bold text-white mb-8 text-center'>
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+          className='mb-8 sm:mb-16'
+        >
+          <h2 className='text-2xl sm:text-3xl font-bold text-white mb-6 sm:mb-8 text-center'>
             What I&apos;m Doing
           </h2>
-          <div className='grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto'>
-            {/* Mobile Apps Card */}
-            <div className='group backdrop-blur-md bg-white/10 border border-white/20 p-6 rounded-lg hover:transform hover:scale-105 transition-all duration-300 shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.24)]'>
-              <div className='flex items-center mb-4'>
-                <div className='w-12 h-12 mr-4 text-[#FFD700] group-hover:scale-110 transition-transform duration-300'>
-                  <svg
-                    xmlns='http://www.w3.org/2000/svg'
-                    fill='none'
-                    viewBox='0 0 24 24'
-                    stroke='currentColor'
+          <div className='grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-8 max-w-5xl mx-auto'>
+            {[
+              {
+                title: 'Mobile Apps',
+                description:
+                  'Professional development of applications for Android and iOS.',
+                icon: 'M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z',
+              },
+              {
+                title: 'Web Development',
+                description:
+                  'High-quality development of sites at the professional level.',
+                icon: 'M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z',
+              },
+              {
+                title: 'UI/UX Design',
+                description:
+                  'The most modern and high-quality design made at a professional level.',
+                icon: 'M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z',
+              },
+              {
+                title: 'Backend Development',
+                description:
+                  'High-performance backend services designed for scalability.',
+                icon: 'M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01',
+              },
+            ].map((service, index) => (
+              <motion.div
+                key={service.title}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                viewport={{ once: true }}
+                className='group backdrop-blur-md bg-white/5 border border-white/10 
+                          p-4 sm:p-6 rounded-xl hover:transform hover:scale-105 
+                          transition-all duration-300 hover:bg-gradient-to-br 
+                          hover:from-purple-500/20 hover:to-blue-500/20'
+              >
+                <div className='flex items-center mb-3 sm:mb-4'>
+                  <div
+                    className='w-10 sm:w-12 h-10 sm:h-12 mr-3 sm:mr-4 
+                                text-purple-500 group-hover:text-white 
+                                transition-colors duration-300'
                   >
-                    <path
-                      strokeLinecap='round'
-                      strokeLinejoin='round'
-                      strokeWidth={2}
-                      d='M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z'
-                    />
-                  </svg>
+                    <svg
+                      xmlns='http://www.w3.org/2000/svg'
+                      fill='none'
+                      viewBox='0 0 24 24'
+                      stroke='currentColor'
+                    >
+                      <path
+                        strokeLinecap='round'
+                        strokeLinejoin='round'
+                        strokeWidth={2}
+                        d={service.icon}
+                      />
+                    </svg>
+                  </div>
+                  <h3 className='text-lg sm:text-xl font-bold text-white'>
+                    {service.title}
+                  </h3>
                 </div>
-                <h3 className='text-xl font-bold text-white'>Mobile Apps</h3>
-              </div>
-              <p className='text-gray-300'>
-                Professional development of applications for Android and iOS.
-              </p>
-            </div>
-
-            {/* Web Development Card */}
-            <div className='group backdrop-blur-md bg-white/10 border border-white/20 p-6 rounded-lg hover:transform hover:scale-105 transition-all duration-300 shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.24)]'>
-              <div className='flex items-center mb-4'>
-                <div className='w-12 h-12 mr-4 text-[#FFD700] group-hover:scale-110 transition-transform duration-300'>
-                  <svg
-                    xmlns='http://www.w3.org/2000/svg'
-                    fill='none'
-                    viewBox='0 0 24 24'
-                    stroke='currentColor'
-                  >
-                    <path
-                      strokeLinecap='round'
-                      strokeLinejoin='round'
-                      strokeWidth={2}
-                      d='M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z'
-                    />
-                  </svg>
-                </div>
-                <h3 className='text-xl font-bold text-white'>
-                  Web Development
-                </h3>
-              </div>
-              <p className='text-gray-300'>
-                High-quality development of sites at the professional level.
-              </p>
-            </div>
-
-            {/* UI/UX Design Card */}
-            <div className='group backdrop-blur-md bg-white/10 border border-white/20 p-6 rounded-lg hover:transform hover:scale-105 transition-all duration-300 shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.24)]'>
-              <div className='flex items-center mb-4'>
-                <div className='w-12 h-12 mr-4 text-[#FFD700] group-hover:scale-110 transition-transform duration-300'>
-                  <svg
-                    xmlns='http://www.w3.org/2000/svg'
-                    fill='none'
-                    viewBox='0 0 24 24'
-                    stroke='currentColor'
-                  >
-                    <path
-                      strokeLinecap='round'
-                      strokeLinejoin='round'
-                      strokeWidth={2}
-                      d='M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z'
-                    />
-                  </svg>
-                </div>
-                <h3 className='text-xl font-bold text-white'>UI/UX Design</h3>
-              </div>
-              <p className='text-gray-300'>
-                The most modern and high-quality design made at a professional
-                level.
-              </p>
-            </div>
-
-            {/* Backend Development Card */}
-            <div className='group backdrop-blur-md bg-white/10 border border-white/20 p-6 rounded-lg hover:transform hover:scale-105 transition-all duration-300 shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:shadow-[0_8px_30px_rgba(0,0,0,0.24)]'>
-              <div className='flex items-center mb-4'>
-                <div className='w-12 h-12 mr-4 text-[#FFD700] group-hover:scale-110 transition-transform duration-300'>
-                  <svg
-                    xmlns='http://www.w3.org/2000/svg'
-                    fill='none'
-                    viewBox='0 0 24 24'
-                    stroke='currentColor'
-                  >
-                    <path
-                      strokeLinecap='round'
-                      strokeLinejoin='round'
-                      strokeWidth={2}
-                      d='M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01'
-                    />
-                  </svg>
-                </div>
-                <h3 className='text-xl font-bold text-white'>
-                  Backend Development
-                </h3>
-              </div>
-              <p className='text-gray-300'>
-                High-performance backend services designed for scalability and
-                seamless user experience.
-              </p>
-            </div>
+                <p className='text-sm sm:text-base text-gray-300'>
+                  {service.description}
+                </p>
+              </motion.div>
+            ))}
           </div>
-        </div>
+        </motion.div>
 
         {/* Skills Section */}
-        <div>
-          <h2 className='text-3xl font-bold text-white mb-8 text-center'>
+        <motion.div
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          transition={{ duration: 0.8 }}
+          viewport={{ once: true }}
+          className='mt-8 sm:mt-16'
+        >
+          <h2 className='text-2xl sm:text-3xl font-bold text-white mb-6 sm:mb-8 text-center'>
             Skills
           </h2>
           <div className='relative max-w-6xl mx-auto'>
-            {/* Gradient Overlays */}
-            <div className='absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-[#0F1624] to-transparent z-10'></div>
-            <div className='absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-[#0F1624] to-transparent z-10'></div>
+            {/* Gradient overlays */}
+            <div
+              className='absolute left-0 top-0 bottom-0 w-12 sm:w-20 
+                          bg-gradient-to-r from-[#0F1624] to-transparent z-10'
+            ></div>
+            <div
+              className='absolute right-0 top-0 bottom-0 w-12 sm:w-20 
+                          bg-gradient-to-l from-[#0F1624] to-transparent z-10'
+            ></div>
 
-            {/* Scrolling Container */}
+            {/* Scrolling container */}
             <div
               ref={scrollContainerRef}
               className='overflow-x-auto hide-scrollbar'
             >
-              <div className='flex gap-6 py-4 px-20 min-w-max'>
-                {/* First set of skills */}
-                {skills.map((skill, index) => (
-                  <div
-                    key={`first-${index}`}
-                    className='flex flex-col items-center bg-[#171F38] p-6 rounded-lg hover:transform hover:scale-105 transition-all duration-300 w-32'
+              <div className='flex gap-3 sm:gap-6 py-4 px-12 sm:px-20 min-w-max'>
+                {[...skills, ...skills].map((skill, index) => (
+                  <motion.div
+                    key={index}
+                    initial={{ opacity: 0, scale: 0.5 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    transition={{
+                      duration: 0.5,
+                      delay: index * 0.05,
+                      type: 'spring',
+                      stiffness: 260,
+                      damping: 20,
+                    }}
+                    className='flex flex-col items-center bg-white/5 p-3 sm:p-6 
+                             rounded-xl hover:bg-white/10 transition-all duration-300 
+                             w-24 sm:w-32 backdrop-blur-sm border border-white/10
+                             hover:transform hover:scale-105'
                   >
-                    <div className='w-16 h-16 mb-4'>
+                    <div className='w-12 sm:w-16 h-12 sm:h-16 mb-2 sm:mb-4 relative group'>
                       <Image
                         src={skill.icon}
                         alt={skill.name}
                         width={64}
                         height={64}
-                        className='w-full h-full object-contain'
+                        className='w-full h-full object-contain transition-transform 
+                                 duration-300 group-hover:transform group-hover:scale-110'
                       />
                     </div>
-                    <span className='text-white text-sm font-medium'>
+                    <span className='text-white text-xs sm:text-sm font-medium text-center'>
                       {skill.name}
                     </span>
-                  </div>
-                ))}
-                {/* Duplicate skills for seamless scrolling */}
-                {skills.map((skill, index) => (
-                  <div
-                    key={`second-${index}`}
-                    className='flex flex-col items-center bg-[#171F38] p-6 rounded-lg hover:transform hover:scale-105 transition-all duration-300 w-32'
-                  >
-                    <div className='w-16 h-16 mb-4'>
-                      <Image
-                        src={skill.icon}
-                        alt={skill.name}
-                        width={64}
-                        height={64}
-                        className='w-full h-full object-contain'
-                      />
-                    </div>
-                    <span className='text-white text-sm font-medium'>
-                      {skill.name}
-                    </span>
-                  </div>
+                  </motion.div>
                 ))}
               </div>
             </div>
           </div>
-        </div>
+        </motion.div>
       </div>
     </div>
   );

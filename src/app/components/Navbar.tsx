@@ -10,17 +10,21 @@ import {
   FaFolder,
   FaPhone,
   FaBlog,
+  FaUserCircle,
 } from 'react-icons/fa';
 
 const Navbar = () => {
   const router = useRouter();
   const pathname = usePathname();
 
+  const [activeSection, setActiveSection] = useState('home');
+
   const scrollToSection = async (
     e: React.MouseEvent<HTMLAnchorElement>,
     sectionId: string
   ) => {
     e.preventDefault();
+    setActiveSection(sectionId);
 
     // Check if we're not on the home page
     if (pathname !== '/') {
@@ -104,6 +108,17 @@ const Navbar = () => {
     },
   ];
 
+  const handleLoginClick = () => {
+    router.push('/login');
+  };
+
+  // Remove the mobileNavItems array and use the existing navItems
+  // Just modify the icons to be smaller for the bottom nav
+  const mobileNavItems = navItems.map((item) => ({
+    ...item,
+    icon: <div className='text-xl'>{item.icon}</div>, // Make icons smaller for mobile
+  }));
+
   return (
     <>
       <motion.nav
@@ -148,6 +163,14 @@ const Navbar = () => {
                   </motion.div>
                 </a>
               ))}
+              <motion.div
+                whileHover={{ y: -2 }}
+                whileTap={{ y: 0 }}
+                onClick={handleLoginClick}
+                className='cursor-pointer text-gray-300 hover:text-white'
+              >
+                <FaUserCircle className='text-2xl' />
+              </motion.div>
             </div>
 
             <motion.button
@@ -161,6 +184,43 @@ const Navbar = () => {
         </div>
       </motion.nav>
 
+      {/* Updated Mobile Bottom Navigation */}
+      <div className='md:hidden fixed bottom-0 left-0 right-0 bg-[#0F1624]/80 backdrop-blur-lg z-50'>
+        <div className='grid grid-cols-4 items-center h-16 px-2'>
+          {mobileNavItems.slice(0, 4).map((item) => (
+            <motion.a
+              key={item.name}
+              href={`#${item.sectionId}`}
+              onClick={(e) => scrollToSection(e, item.sectionId)}
+              className='flex flex-col items-center justify-center space-y-1'
+              whileTap={{ scale: 0.95 }}
+            >
+              <div
+                className={`${
+                  activeSection === item.sectionId
+                    ? 'text-purple-500'
+                    : 'text-gray-400'
+                }`}
+              >
+                {item.icon}
+              </div>
+              <span
+                className={`text-[10px] ${
+                  activeSection === item.sectionId
+                    ? 'text-purple-500'
+                    : 'text-gray-400'
+                }`}
+              >
+                {item.name}
+              </span>
+            </motion.a>
+          ))}
+        </div>
+        {/* Add a safe area padding for iOS devices */}
+        <div className='h-[env(safe-area-inset-bottom)] bg-[#0F1624]/80 backdrop-blur-lg' />
+      </div>
+
+      {/* Show remaining items in a "More" menu if needed */}
       <AnimatePresence>
         {isSidebarOpen && (
           <>
@@ -177,40 +237,64 @@ const Navbar = () => {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'tween', duration: 0.3 }}
-              className='fixed right-0 top-0 h-full w-72 bg-[#0F1624] z-50 md:hidden'
+              className='fixed right-0 top-0 h-full w-[70%] bg-[#0F1624] z-50 md:hidden pb-20'
             >
-              <motion.button
-                className='absolute top-4 right-4 text-2xl text-white'
-                whileTap={{ scale: 0.9 }}
-                onClick={() => setIsSidebarOpen(false)}
-              >
-                ✕
-              </motion.button>
+              {/* Sidebar Header */}
+              <div className='flex items-center justify-between px-2 py-2 border-b border-gray-700'>
+                <div className='cursor-pointer'>
+                  <Logo />
+                </div>
+                <motion.button
+                  className='text-2xl text-white'
+                  whileTap={{ scale: 0.9 }}
+                  onClick={() => setIsSidebarOpen(false)}
+                >
+                  ✕
+                </motion.button>
+              </div>
 
-              <div className='flex flex-col space-y-6 pt-16 px-6'>
-                {navItems.map((item) => (
-                  <a
-                    key={item.name}
-                    href={`#${item.sectionId}`}
-                    onClick={(e) => {
-                      scrollToSection(e, item.sectionId);
-                      setIsSidebarOpen(false);
-                    }}
-                    className={`flex items-center space-x-4 text-gray-300 hover:text-white transition-colors ${
-                      pathname === `/${item.sectionId}`
-                        ? 'text-white font-semibold'
-                        : ''
-                    }`}
-                  >
-                    <motion.div
-                      whileTap={{ scale: 0.95 }}
-                      className='flex items-center space-x-4'
+              <div className='flex flex-col space-y-6 pt-6 px-6'>
+                {navItems.slice(4).map(
+                  (
+                    item // Show remaining items
+                  ) => (
+                    <a
+                      key={item.name}
+                      href={`#${item.sectionId}`}
+                      onClick={(e) => {
+                        scrollToSection(e, item.sectionId);
+                        setIsSidebarOpen(false);
+                      }}
+                      className={`flex items-center space-x-4 text-gray-300 hover:text-white transition-colors ${
+                        pathname === `/${item.sectionId}`
+                          ? 'text-white font-semibold'
+                          : ''
+                      }`}
                     >
-                      <div className='w-8'>{item.icon}</div>
-                      <span>{item.name}</span>
-                    </motion.div>
-                  </a>
-                ))}
+                      <motion.div
+                        whileTap={{ scale: 0.95 }}
+                        className='flex items-center space-x-4'
+                      >
+                        <div className='w-8'>{item.icon}</div>
+                        <span>{item.name}</span>
+                      </motion.div>
+                    </a>
+                  )
+                )}
+                <a
+                  onClick={handleLoginClick}
+                  className='flex items-center space-x-4 text-gray-300 hover:text-white transition-colors cursor-pointer'
+                >
+                  <motion.div
+                    whileTap={{ scale: 0.95 }}
+                    className='flex items-center space-x-4'
+                  >
+                    <div className='w-8'>
+                      <FaUserCircle className='text-2xl' />
+                    </div>
+                    <span>Login</span>
+                  </motion.div>
+                </a>
               </div>
             </motion.div>
           </>

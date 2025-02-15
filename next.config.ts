@@ -10,7 +10,7 @@ const nextConfig: NextConfig = {
       },
     ],
     unoptimized: true,
-    domains: ['your-domain.com'], // Add any specific domains you're loading images from
+    domains: ['https://next-js-portfolio-project-seven.vercel.app/'], // Add any specific domains you're loading images from
   },
   // Enable static exports if needed
   // output: 'export',
