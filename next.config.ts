@@ -23,9 +23,6 @@ const nextConfig: NextConfig = {
     // Temporarily disable eslint during build if needed
     ignoreDuringBuilds: true,
   },
-  experimental: {
-    missingSuspenseWithCSRBailout: false,
-  },
 };
 
 export default nextConfig;
