@@ -1,5 +1,5 @@
 'use client';
-import { motion, useAnimation } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import { FaRocket, FaCode, FaMagic, FaCube } from 'react-icons/fa';
 import {
@@ -15,7 +15,6 @@ import {
 
 const Hero = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const controls = useAnimation();
   const [activeIcon, setActiveIcon] = useState<number | null>(null);
   const [isMounted, setIsMounted] = useState(false);
 
