@@ -9,7 +9,7 @@ import {
 } from 'react-icons/fa';
 import emailjs from '@emailjs/browser';
 import toast from 'react-hot-toast';
-import { showToast } from '../components/Toast';
+import { showToast } from '@/components/Toast';
 
 // Update the initialization with the correct public key
 emailjs.init('BhK_qOapbLq7mNd8f'); // This is your public key

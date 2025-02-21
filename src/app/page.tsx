@@ -1,19 +1,19 @@
-import About from './about/page';
-import ClientHero from './components/ClientHero';
-import Service from './service/page';
-import Projects from './projects/page';
-import Blog from './blog/page';
-import Contact from './contact/page';
+import About from '../components/About';
+import ClientHero from '../components/ClientHero';
+import Service from '../components/Service';
+import Projects from '../components/Projects';
+import Blog from '../components/Blog';
+import Contact from '../components/Contact';
 
 export default function Home() {
   return (
-    <main>
+    <>
       <ClientHero />
       <About />
       <Service />
       <Projects />
       <Blog />
       <Contact />
-    </main>
+    </>
   );
 }

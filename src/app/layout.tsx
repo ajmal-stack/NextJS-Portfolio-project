@@ -4,9 +4,9 @@ import { Inter } from 'next/font/google';
 import './globals.css';
 
 import { Toaster } from 'react-hot-toast';
-import { toasterConfig } from './components/Toast';
+import { toasterConfig } from '../components/Toast';
 import { Providers } from './providers';
-import Navbar from './components/Navbar';
+import Navbar from '../components/Navbar';
 
 const inter = Inter({ subsets: ['latin'] });
 
